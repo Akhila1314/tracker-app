@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shipment Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 16px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+    .badge { padding: 4px 10px; border-radius: 12px; background: #fde68a; }
+    .badge.done { background: #bbf7d0; }
+    input { padding: 8px; margin-right: 8px; }
+    button { padding: 8px 14px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Shipment Tracker</h1>
+
+  <table>
+    <tr><th>ID</th><th>Item</th><th>Location</th><th>Status</th><th></th></tr>
+    <tr th:each="s : ${shipments}">
+      <td th:text="${s.id}"></td>
+      <td th:text="${s.item}"></td>
+      <td th:text="${s.location}"></td>
+      <td><span class="badge" th:classappend="${s.delivered} ? 'done'" th:text="${s.status}"></span></td>
+      <td>
+        <form th:unless="${s.delivered}" th:action="@{/advance/{id}(id=${s.id})}" method="post">
+          <button type="submit">Next stage</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+
+  <h2>Add a shipment</h2>
+  <form th:action="@{/add}" method="post">
+    <input name="item" placeholder="Item" required>
+    <input name="location" placeholder="Current location" required>
+    <button type="submit">Add</button>
+  </form>
+</body>
+</html>
